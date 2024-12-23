@@ -148,7 +148,7 @@ class _Send_RequestState extends State<Send_Request> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserHome(),));
                 },
                 child: Text('OK'),
               ),
