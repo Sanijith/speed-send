@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "428641303325",
+    "project_id": "speedy-send-96a55",
+    "storage_bucket": "speedy-send-96a55.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428641303325:android:38c87bec24860062f67ff4",
+        "android_client_info": {
+          "package_name": "com.example.delivery_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfvyR-p8tSFs_tTyWp_-M60n8_YKKFl3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
