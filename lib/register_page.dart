@@ -11,7 +11,6 @@ class Register_Page extends StatefulWidget {
 }
 
 class _Register_PageState extends State<Register_Page> {
-
   final formKey=GlobalKey<FormState>();
   var name = TextEditingController();
   var password = TextEditingController();
@@ -19,17 +18,15 @@ class _Register_PageState extends State<Register_Page> {
   var phone = TextEditingController();
 
   Future<dynamic> reg() async {
-    await FirebaseFirestore.instance.collection("Driver Register").add({
+    await FirebaseFirestore.instance.collection("UserRegister").add({
       "Username": name.text,
       "Password": password.text,
       "Email": email.text,
       "Phone Number": phone.text,
-      "Path":"https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=",
-    });
+     });
     print("done");
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login_Page()));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,115 +34,138 @@ class _Register_PageState extends State<Register_Page> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors. indigo,
-          ),
           body: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Container(
               height: MediaQuery.of(context).size.height * 1,
-              decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('images/bg.jpg'),fit: BoxFit.fill)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  spacing: 25,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage('images/logo.jpg'),
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('images/bg.jpg'),
+                      fit: BoxFit.fill)),
+              padding: const EdgeInsets.all(50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Register',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: name,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return "Empty Name!";
+                      }
+                    },
+                    keyboardType: TextInputType.name,
+                    decoration:  InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blueGrey.shade100,
+                      border: OutlineInputBorder(),
+                      icon: Icon(Icons.person),
+                      hintText: "Username",
                     ),
-                    Text('SPEEDY SEND',
-                        style: GoogleFonts.aclonica(fontSize: 30, color: Colors.red)),
-                    TextFormField(
-                      controller: name,
-                      validator: (value){
-                        if(value!.isEmpty){
-                          return "Empty Name!";
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.blueGrey.shade100,
-                        border: OutlineInputBorder(
-                        ),
-                        hintText: "Username",
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    obscureText: true,
+                    controller: password,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return "Empty Password!";
+                      }
+                    },
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blueGrey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
+                      icon: const Icon(Icons.lock),
+                      hintText: "Password",
                     ),
-                    TextFormField(
-                      controller: password,
-                      validator: (value){
-                        if(value!.isEmpty){
-                          return "Empty Password!";
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.blueGrey.shade100,
-                        border: OutlineInputBorder(),
-                        hintText: "Password",
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: email,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return "Empty Email!";
+                      }
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blueGrey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
+                      icon: const Icon(Icons.email),
+                      hintText: "Email",
                     ),
-                    TextFormField(
-                      controller: email,
-                      validator: (value){
-                        if(value!.isEmpty){
-                          return "Empty Email!";
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.blueGrey.shade100,
-                        border: OutlineInputBorder(),
-                        hintText: "Email",
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: phone,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Empty Phone Number!";
+                      } else if (value.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return "Invalid Phone Number";
+                      }
+                      return null; // Valid input
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blueGrey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
+                      icon: const Icon(Icons.phone),
+                      hintText: "Phone Number",
                     ),
-                    TextFormField(
-                      controller: phone,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Empty Phone Number!";
-                        } else if (value.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return "Invalid Phone Number";
+                  ),
+                  SizedBox(height: 20),
+                  InkWell(
+                      onTap: () {
+                        if(formKey.currentState!.validate()){
+                          reg();
                         }
-                        return null;
                       },
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.blueGrey.shade100,
-                          border: OutlineInputBorder(), hintText: "Phone Number"),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          if(formKey.currentState!.validate()){
-                            reg();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 53,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.greenAccent),
-                              child: Center(
-                                child: Text('Register'),
-                              )),
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Already Exists "),
-                        TextButton(onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Login_Page(),));
-                        }, child: Text("Login"))
-                      ],
-                    )
-                  ],
-                ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                            height: 53,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green),
+                            child: Center(
+                              child: Text('Register',
+                                  style: GoogleFonts.ubuntu(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            )),
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already have an account?'),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login_Page()));
+                          },
+                          child: const Text('Login')),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
