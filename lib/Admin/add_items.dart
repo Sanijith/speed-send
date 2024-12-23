@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delivery_app/Admin/my_requests.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Add_Item extends StatefulWidget {
   const Add_Item({super.key});
@@ -10,22 +11,18 @@ class Add_Item extends StatefulWidget {
 }
 
 class _Add_ItemState extends State<Add_Item> {
-
-  var productname=TextEditingController();
-  var price=TextEditingController();
-
+  var productname = TextEditingController();
+  var price = TextEditingController();
 
   Future<dynamic> ItemsList() async {
     await FirebaseFirestore.instance.collection("Items").add({
       "Product Name": productname.text,
       "Price": price.text,
-
     });
     print('done');
     setState(() {
       Navigator.pop(context);
     });
-
   }
 
   @override
@@ -43,14 +40,24 @@ class _Add_ItemState extends State<Add_Item> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
-              spacing:20,
+              spacing: 20,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('images/logo.jpg'),
+                  radius: 50,
+                  backgroundColor: Colors.red,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage('images/logo.jpg'),
+                    radius: 45,
+                  ),
                 ),
-                Text("SPEEDY SEND"),
+                Text(
+                  "SPEEDY SEND",
+                  style: GoogleFonts.ubuntu(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.white),
+                ),
                 TextFormField(
                   controller: productname,
                   validator: (value) {
@@ -76,30 +83,35 @@ class _Add_ItemState extends State<Add_Item> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    fillColor:Colors.blueGrey.shade100 ,
-                    filled: true,
-                    border: OutlineInputBorder(),
-                      hintText: "Price"
-                  ),
+                      fillColor: Colors.blueGrey.shade100,
+                      filled: true,
+                      border: OutlineInputBorder(),
+                      hintText: "Price"),
                 ),
                 InkWell(
-                    onTap: () {
-                      setState(() {
-                        ItemsList();
-                      });
-                    },
-                    child: Padding(
+                  onTap: () {
+                    setState(() {
+                      ItemsList();
+                    });
+                  },
+                  child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Container(
-                          height: 53,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.redAccent),
-                          child: Center(
-                            child: Text('ADD ITEM'),
-                          )),
-                    )),
+                        height: 53,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.greenAccent),
+                        child: Center(
+                            child: Text(
+                          'ADD ITEM',
+                          style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white),
+                        )),
+                      )),
+                )
               ],
             ),
           ),

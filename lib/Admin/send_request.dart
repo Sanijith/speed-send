@@ -13,7 +13,9 @@ class _Send_RequestState extends State<Send_Request> {
   final TextEditingController toController = TextEditingController();
 
   String? selectedDriver;
-  List<String> drivers = [];
+  String? selectedDriverId; // Store selected driver's ID
+  List<Map<String, String>> drivers = [
+  ]; // Store drivers as a map with 'Username' and 'DriverId'
   List<String> items = []; // List to store items from Firebase
   List<String> selectedItems = []; // List to store selected items
   bool isLoading = true; // To show loading indicator while fetching data
@@ -32,9 +34,12 @@ class _Send_RequestState extends State<Send_Request> {
           .collection('Driver')
           .get();
 
-      List<String> driverList = [];
+      List<Map<String, String>> driverList = [];
       for (var doc in snapshot.docs) {
-        driverList.add(doc['Username']);
+        driverList.add({
+          'Username': doc['Username'],
+          'DriverId': doc.id, // Use the document ID as the Driver ID
+        });
       }
 
       setState(() {
@@ -54,7 +59,8 @@ class _Send_RequestState extends State<Send_Request> {
 
       List<String> itemList = [];
       for (var doc in snapshot.docs) {
-        itemList.add(doc['Product Name']); // Assuming each item document has a "name" field
+        itemList.add(
+            doc['Product Name']); // Assuming each item document has a "name" field
       }
 
       setState(() {
@@ -74,7 +80,8 @@ class _Send_RequestState extends State<Send_Request> {
     if (fromController.text.isEmpty ||
         toController.text.isEmpty ||
         selectedItems.isEmpty ||
-        selectedDriver == null) {
+        selectedDriver == null ||
+        selectedDriverId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Please fill all fields")),
       );
@@ -86,8 +93,9 @@ class _Send_RequestState extends State<Send_Request> {
         'From': fromController.text,
         'To': toController.text,
         'Items': selectedItems,
-        'Driver': selectedDriver,
-        'Status':0,
+        'Driver': selectedDriver, // Store the driver's username
+        'DriverId': selectedDriverId, // Store the driver's ID
+        'Status': "0",
       });
 
       _showSuccessDialog();
@@ -96,6 +104,7 @@ class _Send_RequestState extends State<Send_Request> {
       toController.clear();
       setState(() {
         selectedDriver = null;
+        selectedDriverId = null;
         selectedItems = [];
       });
     } catch (e) {
@@ -151,159 +160,179 @@ class _Send_RequestState extends State<Send_Request> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.indigo,
-        ),
-        body: Container(
-          height: MediaQuery.of(context).size.height * 1,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/bg.jpg'),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              spacing: 30,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('images/logo.jpg'),
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.indigo,
+            )
+            ,
+            body
+                :
+            Container
+              (
+              height
+                  :
+              MediaQuery
+                  .
+              of
+                (
+                  context
+              )
+                  .size
+                  .height * 1,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/bg.jpg'),
+                  fit: BoxFit.fill,
                 ),
-                Text("SPEEDY SEND"),
-                TextFormField(
-                  controller: fromController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Empty Place!";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade100,
-                    border: OutlineInputBorder(),
-                    hintText: "FROM",
-                  ),
-                ),
-                TextFormField(
-                  controller: toController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Empty Place!";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade100,
-                    border: OutlineInputBorder(),
-                    hintText: "TO",
-                  ),
-                ),
-                // Multi-Select Items Dropdown
-                isLoading
-                    ? CircularProgressIndicator()
-                    : Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade100,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                      color: Colors.blueGrey.shade300,
-                      width: 1.0,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  spacing: 30,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage('images/logo.jpg'),
                     ),
-                  ),
-                  child: DropdownButton<String>(
-                    value: null, // No value to pre-select
-                    hint: Text("Select Items"),
-                    onChanged: (newValue) {
-                      setState(() {
-                        if (newValue != null &&
-                            !selectedItems.contains(newValue)) {
-                          selectedItems.add(newValue);
+                    Text("SPEEDY SEND"),
+                    TextFormField(
+                      controller: fromController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Empty Place!";
                         }
-                      });
-                    },
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    items: items
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                // Display selected items
-                TextFormField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade100,
-                    border: OutlineInputBorder(),
-                    hintText: selectedItems.isEmpty
-                        ? "No items selected"
-                        : selectedItems.join(', '),
-                  ),
-                ),
-                // Driver Select Dropdown
-                isLoading
-                    ? CircularProgressIndicator()
-                    : Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade100,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                      color: Colors.blueGrey.shade300,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: DropdownButton<String>(
-                    value: selectedDriver,
-                    hint: Text("Select Driver"),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedDriver = newValue;
-                      });
-                    },
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    items: drivers
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                InkWell(
-                  onTap: _saveRequest,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Container(
-                      height: 53,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.greenAccent),
-                      child: Center(
-                        child: Text('SEND'),
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade100,
+                        border: OutlineInputBorder(),
+                        hintText: "FROM",
                       ),
                     ),
-                  ),
+                    TextFormField(
+                      controller: toController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Empty Place!";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade100,
+                        border: OutlineInputBorder(),
+                        hintText: "TO",
+                      ),
+                    ),
+                    // Multi-Select Items Dropdown
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey.shade100,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.blueGrey.shade300,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: DropdownButton<String>(
+                        value: null,
+                        // No value to pre-select
+                        hint: Text("Select Items"),
+                        onChanged: (newValue) {
+                          setState(() {
+                            if (newValue != null &&
+                                !selectedItems.contains(newValue)) {
+                              selectedItems.add(newValue);
+                            }
+                          });
+                        },
+                        isExpanded: true,
+                        underline: SizedBox(),
+                        items: items
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    // Display selected items
+                    TextFormField(
+                      enabled: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade100,
+                        border: OutlineInputBorder(),
+                        hintText: selectedItems.isEmpty
+                            ? "No items selected"
+                            : selectedItems.join(', '),
+                      ),
+                    ),
+                    // Driver Select Dropdown
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey.shade100,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.blueGrey.shade300,
+                          width: 1.0,
+                        ),
+                      ),
+                      child: DropdownButton<String>(
+                        value: selectedDriver,
+                        hint: Text("Select Driver"),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedDriver = newValue;
+                            selectedDriverId = drivers.firstWhere(
+                                  (driver) => driver['Username'] == newValue,
+                            )['DriverId'];
+                          });
+                        },
+                        isExpanded: true,
+                        underline: SizedBox(),
+                        items: drivers
+                            .map<DropdownMenuItem<String>>((Map<String,
+                            String> driver) {
+                          return DropdownMenuItem<String>(
+                            value: driver['Username'],
+                            child: Text(driver['Username']!),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: _saveRequest,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          height: 53,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.greenAccent),
+                          child: Center(
+                            child: Text('SEND'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            )
+
+        )
+
     );
   }
 }

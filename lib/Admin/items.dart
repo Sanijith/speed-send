@@ -73,7 +73,7 @@ class _ItemsState extends State<Items> {
                                 radius: 20,
                               ),
                               title: Text("Item: ${item[index]["Product Name"]}"),
-                              subtitle: Text("Price ${item[index]["Price"]}"),
+                              subtitle: Text("Price: RS ${item[index]["Price"]} /-"),
                             ),
                           );
                         },

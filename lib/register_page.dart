@@ -35,22 +35,29 @@ class _Register_PageState extends State<Register_Page> {
         key: formKey,
         child: Scaffold(
           body: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
             child: Container(
-              height: MediaQuery.of(context).size.height * 1,
+              // height: MediaQuery.of(context).size.height * 1,
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('images/bg.jpg'),
                       fit: BoxFit.fill)),
               padding: const EdgeInsets.all(50),
               child: Column(
+                spacing: 25,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.red,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('images/logo.jpg'),
+                      radius: 45,
+                    ),
+                  ),
                   const Text(
                     'Register',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
                   TextFormField(
                     controller: name,
                     validator: (value){
@@ -67,7 +74,6 @@ class _Register_PageState extends State<Register_Page> {
                       hintText: "Username",
                     ),
                   ),
-                  SizedBox(height: 20),
                   TextFormField(
                     obscureText: true,
                     controller: password,
@@ -86,7 +92,6 @@ class _Register_PageState extends State<Register_Page> {
                       hintText: "Password",
                     ),
                   ),
-                  SizedBox(height: 20),
                   TextFormField(
                     controller: email,
                     validator: (value){
@@ -105,7 +110,6 @@ class _Register_PageState extends State<Register_Page> {
                       hintText: "Email",
                     ),
                   ),
-                  SizedBox(height: 20),
                   TextFormField(
                     controller: phone,
                     validator: (value) {
@@ -126,7 +130,6 @@ class _Register_PageState extends State<Register_Page> {
                       hintText: "Phone Number",
                     ),
                   ),
-                  SizedBox(height: 20),
                   InkWell(
                       onTap: () {
                         if(formKey.currentState!.validate()){

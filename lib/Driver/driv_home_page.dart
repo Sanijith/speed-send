@@ -75,56 +75,6 @@ class _DriverHomeState extends State<DriverHome> {
               ),
             ),
           ),
-          // Positioned(
-          //   top: 250, // Adjust the top position as needed
-          //   left: 0, // Adjust the left position as needed
-          //   right: 100, // Adjust the right position as needed
-          //   child: InkWell(
-          //     onTap: () {},
-          //     child: Container(
-          //       height: 70,
-          //       decoration: BoxDecoration(
-          //           color: Colors.lightGreenAccent,
-          //           borderRadius: BorderRadius.only(
-          //               topRight: Radius.circular(30),
-          //               bottomRight: Radius.circular(30))),
-          //       // Second container color
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Text(
-          //             'Items',
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // Positioned(
-          //   top: 400, // Adjust the top position as needed
-          //   left: 100, // Adjust the left position as needed
-          //   right: 0, // Adjust the right position as needed
-          //   child: InkWell(
-          //     onTap: () {},
-          //     child: Container(
-          //       height: 70,
-          //       decoration: BoxDecoration(
-          //           color: Colors.lightGreenAccent,
-          //           borderRadius: BorderRadius.only(
-          //               bottomLeft: Radius.circular(30),
-          //               topLeft: Radius.circular(30))),
-          //       // Second container color
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Text(
-          //             'Delivery',
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

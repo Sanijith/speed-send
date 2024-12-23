@@ -67,17 +67,17 @@ class _My_RequestsState extends State<My_Requests> {
                     itemCount: request.length,
                     itemBuilder: (context, index) {
                       // Fetch the status value from the document
-                      int status = request[index]["Status"] ?? 0; // Default to 0 if null
+                      var status = request[index]["Status"] ?? "0"; // Default to 0 if null
 
                       // Determine the trailing icon based on the status value
                       Icon trailingIcon;
                       Color iconColor = Colors.grey;
 
-                      if (status == 0) {
+                      if (status == "0") {
                         trailingIcon = Icon(Icons.pending, color: Colors.orange);
-                      } else if (status == 1) {
+                      } else if (status == "1") {
                         trailingIcon = Icon(Icons.check_circle_outline, color: Colors.green);
-                      } else if (status == 2) {
+                      } else if (status == "2") {
                         trailingIcon = Icon(Icons.cancel_outlined, color: Colors.red);
                       } else {
                         trailingIcon = Icon(Icons.help_outline, color: Colors.grey); // Default icon for unknown status

@@ -96,8 +96,12 @@ class _Login_PageState extends State<Login_Page> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('images/logo.jpg'),
+                    radius: 50,
+                    backgroundColor: Colors.red,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('images/logo.jpg'),
+                      radius: 45,
+                    ),
                   ),
                   Text('SPEEDY SEND',
                       style: GoogleFonts.aclonica(fontSize: 30, color: Colors.red)),
