@@ -1,18 +1,14 @@
-import 'package:delivery_app/Admin/add_items.dart';
-import 'package:delivery_app/Admin/drivers.dart';
-import 'package:delivery_app/Admin/home_page.dart';
-import 'package:delivery_app/Admin/items.dart';
-import 'package:delivery_app/Admin/my_requests.dart';
-import 'package:delivery_app/Admin/send_request.dart';
-import 'package:delivery_app/Driver/bottom_nav.dart';
-import 'package:delivery_app/Driver/driv_home_page.dart';
-import 'package:delivery_app/Driver/profile.dart';
-import 'package:delivery_app/login_page.dart';
-import 'package:delivery_app/register_page.dart';
 import 'package:delivery_app/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -24,12 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'FleetRide',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }

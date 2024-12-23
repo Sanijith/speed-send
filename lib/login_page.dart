@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delivery_app/Admin/home_page.dart';
+import 'package:delivery_app/Driver/bottom_nav.dart';
 import 'package:delivery_app/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,14 +37,14 @@ class _Login_PageState extends State<Login_Page> {
     } else {
 
       final driver = await FirebaseFirestore.instance
-          .collection('DriverRegister')
+          .collection('Driver')
           .where('Email', isEqualTo: email.text)
           .where('Password', isEqualTo: password.text)
           .get();
       if (driver.docs.isNotEmpty) {
 
         id = driver.docs[0].id;
-        name = driver.docs[0]["UserName"];
+        name = driver.docs[0]["Username"];
         phoneNumber = driver.docs[0]["Phone Number"];
 
         SharedPreferences data = await SharedPreferences.getInstance();
@@ -51,12 +52,15 @@ class _Login_PageState extends State<Login_Page> {
         data.setString('name', name);
         data.setString('Phone', phoneNumber);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DriverHome(),
-          ),
-        );
+        setState(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CurvedNavigationBar1(),
+            ),
+          );
+        });
+
       } else {
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -9,42 +9,63 @@ class Send_Request extends StatefulWidget {
 }
 
 class _Send_RequestState extends State<Send_Request> {
-  // Controller for text fields to retrieve their values
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();
-  final TextEditingController itemController = TextEditingController();
 
   String? selectedDriver;
-  List<String> drivers = []; // List to store driver names
+  List<String> drivers = [];
+  List<String> items = []; // List to store items from Firebase
+  List<String> selectedItems = []; // List to store selected items
   bool isLoading = true; // To show loading indicator while fetching data
 
   @override
   void initState() {
     super.initState();
     _fetchDrivers();
+    _fetchItems();
   }
 
   // Fetch drivers from Firebase Firestore
   Future<void> _fetchDrivers() async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('driver_register')
+          .collection('Driver')
           .get();
 
       List<String> driverList = [];
       for (var doc in snapshot.docs) {
-        driverList.add(doc['name']);
+        driverList.add(doc['Username']);
       }
 
       setState(() {
         drivers = driverList;
+      });
+    } catch (e) {
+      print('Error fetching drivers: $e');
+    }
+  }
+
+  // Fetch items from Firebase Firestore
+  Future<void> _fetchItems() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Items') // Assuming items collection is named "items"
+          .get();
+
+      List<String> itemList = [];
+      for (var doc in snapshot.docs) {
+        itemList.add(doc['Product Name']); // Assuming each item document has a "name" field
+      }
+
+      setState(() {
+        items = itemList;
         isLoading = false;
       });
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      print('Error fetching drivers: $e');
+      print('Error fetching items: $e');
     }
   }
 
@@ -52,9 +73,8 @@ class _Send_RequestState extends State<Send_Request> {
   Future<void> _saveRequest() async {
     if (fromController.text.isEmpty ||
         toController.text.isEmpty ||
-        itemController.text.isEmpty ||
+        selectedItems.isEmpty ||
         selectedDriver == null) {
-      // Show an error message if any field is empty
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Please fill all fields")),
       );
@@ -62,23 +82,21 @@ class _Send_RequestState extends State<Send_Request> {
     }
 
     try {
-      // Create a new document in the 'request' collection
       await FirebaseFirestore.instance.collection('Requests').add({
         'From': fromController.text,
         'To': toController.text,
-        'Item': itemController.text,
+        'Items': selectedItems,
         'Driver': selectedDriver,
+        'Status':0,
       });
 
-      // Show success dialog
       _showSuccessDialog();
 
-      // Optionally, clear the fields after saving
       fromController.clear();
       toController.clear();
-      itemController.clear();
       setState(() {
         selectedDriver = null;
+        selectedItems = [];
       });
     } catch (e) {
       print('Error saving request: $e');
@@ -88,7 +106,7 @@ class _Send_RequestState extends State<Send_Request> {
     }
   }
 
-
+  // Show success dialog after saving request
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -122,7 +140,6 @@ class _Send_RequestState extends State<Send_Request> {
                   Navigator.of(context).pop();
                 },
                 child: Text('OK'),
-
               ),
             ],
           ),
@@ -159,6 +176,12 @@ class _Send_RequestState extends State<Send_Request> {
                 Text("SPEEDY SEND"),
                 TextFormField(
                   controller: fromController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Empty Place!";
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.blueGrey.shade100,
@@ -168,6 +191,12 @@ class _Send_RequestState extends State<Send_Request> {
                 ),
                 TextFormField(
                   controller: toController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Empty Place!";
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.blueGrey.shade100,
@@ -175,13 +204,51 @@ class _Send_RequestState extends State<Send_Request> {
                     hintText: "TO",
                   ),
                 ),
+                // Multi-Select Items Dropdown
+                isLoading
+                    ? CircularProgressIndicator()
+                    : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade100,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                      color: Colors.blueGrey.shade300,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: DropdownButton<String>(
+                    value: null, // No value to pre-select
+                    hint: Text("Select Items"),
+                    onChanged: (newValue) {
+                      setState(() {
+                        if (newValue != null &&
+                            !selectedItems.contains(newValue)) {
+                          selectedItems.add(newValue);
+                        }
+                      });
+                    },
+                    isExpanded: true,
+                    underline: SizedBox(),
+                    items: items
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                // Display selected items
                 TextFormField(
-                  controller: itemController,
+                  enabled: false,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.blueGrey.shade100,
                     border: OutlineInputBorder(),
-                    hintText: "Item select",
+                    hintText: selectedItems.isEmpty
+                        ? "No items selected"
+                        : selectedItems.join(', '),
                   ),
                 ),
                 // Driver Select Dropdown
@@ -205,8 +272,8 @@ class _Send_RequestState extends State<Send_Request> {
                         selectedDriver = newValue;
                       });
                     },
-                    isExpanded: true, // Make dropdown fill the container
-                    underline: SizedBox(), // Remove the default underline
+                    isExpanded: true,
+                    underline: SizedBox(),
                     items: drivers
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -217,7 +284,7 @@ class _Send_RequestState extends State<Send_Request> {
                   ),
                 ),
                 InkWell(
-                  onTap: _saveRequest, // Save data when the button is pressed
+                  onTap: _saveRequest,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(

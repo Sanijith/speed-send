@@ -1,3 +1,4 @@
+import 'package:delivery_app/Driver/request_decision.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -52,14 +53,16 @@ class _DriverHomeState extends State<DriverHome> {
             left: 100, // Adjust the left position as needed
             right: 0, // Adjust the right position as needed
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Request_Decision(),));
+              },
               child: Container(
                 height: 70,
                 decoration: BoxDecoration(
                     color: Colors.lightGreenAccent,
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        topLeft: Radius.circular(30))),
+                        bottomLeft: Radius.circular(15),
+                        topLeft: Radius.circular(15))),
                 // Second container color
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

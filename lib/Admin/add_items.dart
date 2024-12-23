@@ -32,59 +32,76 @@ class _Add_ItemState extends State<Add_Item> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          backgroundColor: Colors.indigo,
+        ),
         body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.greenAccent.shade200,
-              ),
-              Text("SPEEDY SEND"),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Product Name",
+          height: MediaQuery.of(context).size.height * 1,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/bg.jpg'), fit: BoxFit.fill)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              spacing:20,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage('images/logo.jpg'),
                 ),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    hintText: "Price"
+                Text("SPEEDY SEND"),
+                TextFormField(
+                  controller: productname,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Empty Product!";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.blueGrey.shade100,
+                    border: OutlineInputBorder(),
+                    hintText: "Product Name",
+                  ),
                 ),
-              ),
-              InkWell(
-                  onTap: () {
-
+                TextFormField(
+                  controller: price,
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Empty Price!";
+                    }
+                    return null;
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Container(
-                        height: 53,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.redAccent),
-                        child: Center(
-                          child: Text('ADD ITEM'),
-                        )),
-                  )),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => My_Requests(),));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Container(
-                        height: 53,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.redAccent),
-                        child: Center(
-                          child: Text('MY REQUESTS'),
-                        )),
-                  )),
-            ],
+                  decoration: InputDecoration(
+                    fillColor:Colors.blueGrey.shade100 ,
+                    filled: true,
+                    border: OutlineInputBorder(),
+                      hintText: "Price"
+                  ),
+                ),
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        ItemsList();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Container(
+                          height: 53,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.redAccent),
+                          child: Center(
+                            child: Text('ADD ITEM'),
+                          )),
+                    )),
+              ],
+            ),
           ),
         ),
       ),

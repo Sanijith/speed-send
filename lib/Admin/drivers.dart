@@ -9,34 +9,6 @@ class Drivers extends StatefulWidget {
 }
 
 class _DriversState extends State<Drivers> {
-  String? selectedDriver;  // To store the selected driver ID
-  List<Map<String, dynamic>> drivers = [];  // To store drivers from Firebase
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchDrivers();  // Fetch drivers when the widget is initialized
-  }
-
-  // Fetch drivers from Firestore
-  Future<void> _fetchDrivers() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Driver register').get();
-
-      setState(() {
-        drivers = querySnapshot.docs.map((doc) {
-          return {
-            'id': doc.id,
-            'name': doc['name'],  // Assuming you have a 'name' field in Firestore
-            'phone': doc['phone'], // Assuming you have a 'phone' field in Firestore
-          };
-        }).toList();
-      });
-    } catch (e) {
-      print('Error fetching drivers: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,70 +55,35 @@ class _DriversState extends State<Drivers> {
               ),
             ),
             // Dropdown to select a driver
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: selectedDriver,
-                hint: const Text('Select Driver'),
-                items: drivers.map((driver) {
-                  return DropdownMenuItem<String>(
-                    value: driver['id'],
-                    child: Text(driver['name']),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedDriver = value;
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Display the selected driver's details
-            if (selectedDriver != null)
-              FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('Driver register')
-                    .doc(selectedDriver)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (snapshot.hasError) {
-                    return const Text('Error fetching details');
-                  }
-                  if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const Text('Driver not found');
-                  }
-
-                  var driverData = snapshot.data!;
-                  return Card(
-                    child: ListTile(
-                      leading: const CircleAvatar(radius: 20),
-                      title: Text(driverData['name']),
-                      subtitle: Text(driverData['phone']),
-                      trailing: const Icon(Icons.phone_outlined),
-                    ),
-                  );
-                },
-              ),
             Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const CircleAvatar(radius: 20),
-                      title: Text("Driver $index"),
-                      trailing: const Icon(Icons.phone_outlined),
-                      subtitle: Text("Phone Number $index"),
-                    ),
-                  );
-                },
-              ),
-            ),
+                child: FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection("Driver")
+                        .get(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text("Error:${snapshot.error}"),
+                        );
+                      }
+                      final driver = snapshot.data?.docs ?? [];
+                      return ListView.builder(
+                        itemCount: driver.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              leading: const CircleAvatar(radius: 20),
+                              title: Text(driver[index]["Username"]),
+                              trailing: const Icon(Icons.phone_outlined),
+                              subtitle: Text("Phone Number: ${driver[index]["Phone Number"]}"),
+                            ),
+                          );
+                        },
+                      );
+                    })),
           ],
         ),
       ),

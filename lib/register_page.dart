@@ -18,7 +18,7 @@ class _Register_PageState extends State<Register_Page> {
   var phone = TextEditingController();
 
   Future<dynamic> reg() async {
-    await FirebaseFirestore.instance.collection("UserRegister").add({
+    await FirebaseFirestore.instance.collection("Driver").add({
       "Username": name.text,
       "Password": password.text,
       "Email": email.text,
@@ -81,7 +81,6 @@ class _Register_PageState extends State<Register_Page> {
                       filled: true,
                       fillColor: Colors.blueGrey.shade100,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
                       ),
                       icon: const Icon(Icons.lock),
                       hintText: "Password",
@@ -100,7 +99,7 @@ class _Register_PageState extends State<Register_Page> {
                       filled: true,
                       fillColor: Colors.blueGrey.shade100,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
+
                       ),
                       icon: const Icon(Icons.email),
                       hintText: "Email",
@@ -122,7 +121,6 @@ class _Register_PageState extends State<Register_Page> {
                       filled: true,
                       fillColor: Colors.blueGrey.shade100,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
                       ),
                       icon: const Icon(Icons.phone),
                       hintText: "Phone Number",
