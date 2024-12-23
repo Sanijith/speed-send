@@ -2,6 +2,7 @@ import 'package:delivery_app/Driver/request_decision.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DriverHome extends StatefulWidget {
   const DriverHome({super.key});
@@ -43,7 +44,11 @@ class _DriverHomeState extends State<DriverHome> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("SPEEDY SEND"),
+                      child: Text('SPEEDY SEND',
+                          style: GoogleFonts.aclonica(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     )
                   ],
                 ),
@@ -67,9 +72,11 @@ class _DriverHomeState extends State<DriverHome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Requests',
-                    ),
+                    Text('REQUESTS',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                   ],
                 ),
               ),

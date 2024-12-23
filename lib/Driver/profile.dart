@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delivery_app/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
@@ -75,6 +77,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Text(
                                   Driver!["Username"],
+                                  style: TextStyle(fontSize: 25),
                                 ),
                               ],
                             ),
@@ -110,12 +113,14 @@ class _ProfileState extends State<Profile> {
                         height: 50,
                       ),
                       InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Login_Page(),));
+                          },
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Container(
                                 height: 53,
-                                width: 100,
+                                width: 120,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.redAccent),
@@ -127,7 +132,11 @@ class _ProfileState extends State<Profile> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Text('Logout'),
+                                      Text('Logout',
+                                          style: GoogleFonts.ubuntu(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white)),
                                     ],
                                   ),
                                 )),

@@ -21,14 +21,18 @@ class _FirstPageState extends State<FirstPage> {
                   image: AssetImage('images/bg.jpg'), fit: BoxFit.fill)),
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
+            spacing: 30,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('images/logo.jpg'),
+                backgroundColor: Colors.red,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('images/logo.jpg'),
+                  radius: 45,
+                ),
               ),
-              SizedBox(height: 10),
               Center(
                 child: Text('SPEEDY SEND',
                     style: GoogleFonts.aclonica(fontSize: 30, color: Colors.red)),

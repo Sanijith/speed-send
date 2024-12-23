@@ -2,9 +2,11 @@ import 'package:delivery_app/Admin/drivers.dart';
 import 'package:delivery_app/Admin/items.dart';
 import 'package:delivery_app/Admin/my_requests.dart';
 import 'package:delivery_app/Admin/send_request.dart';
+import 'package:delivery_app/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserHome extends StatefulWidget {
   const UserHome({super.key});
@@ -22,9 +24,11 @@ class _UserHomeState extends State<UserHome> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Login_Page(),));
+            },
             icon: Icon(
-              Icons.login,
+              Icons.logout_outlined,
               color: Colors.red,
             ),
           )
@@ -58,7 +62,11 @@ class _UserHomeState extends State<UserHome> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("SPEEDY SEND"),
+                      child: Text('SPEEDY SEND',
+                          style: GoogleFonts.aclonica(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     )
                   ],
                 ),
@@ -82,9 +90,11 @@ class _UserHomeState extends State<UserHome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Drivers',
-                    ),
+                    Text('DRIVERS',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                   ],
                 ),
               ),
@@ -109,9 +119,11 @@ class _UserHomeState extends State<UserHome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Items',
-                    ),
+                    Text('ITEMS',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                   ],
                 ),
               ),
@@ -136,9 +148,11 @@ class _UserHomeState extends State<UserHome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Delivery',
-                    ),
+                    Text('DELIVERY',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                   ],
                 ),
               ),
@@ -163,9 +177,11 @@ class _UserHomeState extends State<UserHome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'My Request',
-                    ),
+                    Text('MY REQUESTS',
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                   ],
                 ),
               ),

@@ -79,9 +79,6 @@ class _Login_PageState extends State<Login_Page> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.indigo,
-          ),
           body: Container(
             height: MediaQuery.of(context).size.height * 1,
             decoration: BoxDecoration(
@@ -121,6 +118,7 @@ class _Login_PageState extends State<Login_Page> {
                     ),
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: password,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -146,10 +144,14 @@ class _Login_PageState extends State<Login_Page> {
                       width: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.greenAccent,
+                        color: Colors.green,
                       ),
                       child: Center(
-                        child: Text('Login'),
+                        child: Text('Login',
+                            style: GoogleFonts.ubuntu(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
                       ),
                     ),
                   ),
